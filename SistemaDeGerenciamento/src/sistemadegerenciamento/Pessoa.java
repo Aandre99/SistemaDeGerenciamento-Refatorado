@@ -49,6 +49,10 @@ abstract class Pessoa {
     public String getContato() {
         return contato;
     }
+    public void RemoverProjeto(Projeto proj)
+    {
+        this.projetosDePesquisa.remove(proj);
+    }
     
     public void setNome(String nome) {
         this.nome = nome;

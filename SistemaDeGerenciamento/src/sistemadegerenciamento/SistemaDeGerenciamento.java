@@ -15,11 +15,10 @@ public class SistemaDeGerenciamento {
 
         ControleDoSistema Sistema = new ControleDoSistema();
 
-        try
-        {
-
             while(true)
             { 
+                try
+               {
                 Sistema.MenuPrincipal();
                 opcao = Ler.nextInt();
                 
@@ -77,12 +76,18 @@ public class SistemaDeGerenciamento {
                         case 9:
                             Sistema.Relatorio();
                             break;
+                        case 10:
+                            Sistema.RemoverAlunosGraduandos();
+                            break;
                     }
                 }
-            }
-        }catch(InputMismatchException e){
+                
+                }catch(InputMismatchException e){
                 System.out.println("\n-> Entrada informada não é compativel com o tipo de dado esperado!");
                 System.out.println("-> Interrompendo o Sistema!");
+                Ler.next();
+                continue;
         }
+            }
     }
 }

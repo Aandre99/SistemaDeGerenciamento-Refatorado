@@ -59,8 +59,7 @@ public class Aluno extends Pessoa{
     public void CadastrarPessoa(){
         
         String informacao;
-        int info = 0;
-        Professor novoProfessor = new Professor();
+        int info;
         
         System.out.println("Informe os seguintes topicos: ");
         System.out.println("Nome: ");

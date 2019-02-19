@@ -25,6 +25,8 @@ public class ControleDoSistema
         
     }
      
+    //Geters e Seters
+     
     public ArrayList<Projeto> getListaDeProjetos() {
         return ListaDeProjetos;
     }
@@ -64,12 +66,12 @@ public class ControleDoSistema
         System.out.println("7 - Alterar Status");
         System.out.println("8 - Consulta;");
         System.out.println("9 - Relatorio de Produção Acadêmica;");
+        System.out.println("10 - Correção para alteração do Status;");
         System.out.println("0 - Sair;");
         System.out.println("- - - - - - - - - - - - - -\n");
     }
-    public void CadastrarProjeto()
-    {
-        String informacao, limparLixo;
+    public void CadastrarProjeto(){
+        String informacao;
         int dia=0, mes=0, ano=0;
         double valor;
         
@@ -117,7 +119,7 @@ public class ControleDoSistema
                 ano = Ler.nextInt();
                 novoProjeto.setDataTermino(dia, mes, ano);
 
-                limparLixo = Ler.nextLine();
+                Ler.nextLine();
             }catch(InputMismatchException II){
                 verifica = true;
                 System.out.println("\n-> Erro! Tipo de dado incorreto, abortando o cadastro do novo projeto!");
@@ -125,8 +127,11 @@ public class ControleDoSistema
             
             if(!verifica)
             {
-                
-                System.out.println("É necessario vincular um professor ao projeto!");
+                System.out.println("\nÉ necessario vincular um professor ao projeto!");
+                System.out.println("Lista de Professores Disponíveis: ");
+                for(Professor prof : this.ListaDeProfessores){
+                    System.out.println("Nome: " + prof.getNome());
+                }
                 System.out.println("Informe o nome do Professor escolhido: ");
                 informacao = Ler.nextLine();
 
@@ -146,8 +151,7 @@ public class ControleDoSistema
             System.out.println("Dica: Não ha professores cadastrados!");
         }
     }
-    public void MostarProjetos()      
-    {
+    public void MostarProjetos(){
         for(Projeto Item : this.getListaDeProjetos()){
             System.out.println("\n");
             Item.MostrarProjeto();
@@ -162,8 +166,6 @@ public class ControleDoSistema
         
         this.ListaDeProfessores.add(novoProfessor);
         this.Colaboradores.add(novoProfessor);
-        
-        novoProfessor.MostrarPessoa();
         System.out.println("\n-> Professor cadastrado com sucesso!");
     }
     public void CadastrarAluno(){
@@ -176,13 +178,20 @@ public class ControleDoSistema
         this.Colaboradores.add(novoAluno);
         System.out.println("\n-> Aluno cadastrado com sucesso!");
     }
- 
     public void AlocarParticipantes(){
         
             int opcao = 0;
             String auxiliar;
             String limparLixo;
             
+            System.out.println("\nLista de Projetos Disponíveis: ");
+            for(Projeto proj : this.ListaDeProjetos){
+
+                if(!proj.getStatus().equals("Em elaboracao")){
+                    System.out.println("Titulo: " + proj.getTitulo());
+                }
+            }
+        
             System.out.println("Informe o nome do Projeto para o qual deseja alocar participantes: ");
             auxiliar = Ler.nextLine();
             
@@ -200,7 +209,14 @@ public class ControleDoSistema
                         
                         if(opcao == 1){
 
-                            System.out.println("Informe o nome do Aluno que deseja alocar para o projeto: ");
+                            System.out.println("\nLista de Alunos disponíveis: ");
+                            for(Aluno aluno : this.ListaDeAlunos){
+                                
+                                if(!projeto.getAlunosVinculados().contains(aluno)){
+                                    System.out.println("Nome: " + aluno.getNome());
+                                }
+                            }
+                            System.out.println("\nInforme o nome do Aluno que deseja alocar para o projeto: ");
                             auxiliar = Ler.nextLine();
                             for(Aluno aluno : this.ListaDeAlunos)
                             {
@@ -245,15 +261,21 @@ public class ControleDoSistema
                 }
             }       
     }
-    public void AlterarStatus(){
+    public void AlterarStatus() {
+        
         int opcao;
         String auxiliar;
-        String Lixo;
-        Aluno novoAluno = null;
         int x = 0;
         boolean verifica = true;
 
-        System.out.println("Informe o Titulo do projeto que deseja alterar o Status: ");
+        System.out.println("\n-> Lista de Projetos Disponíveis: ");
+        for(Projeto proj : this.ListaDeProjetos){
+            
+            if(proj.getStatus().equals("Em elaboração")){
+                System.out.println("Titulo: " + proj.getTitulo());
+            }
+        }
+        System.out.println("\nInforme o Titulo do projeto que deseja alterar o Status: ");
         auxiliar = Ler.nextLine();
 
         for(Projeto projeto : this.ListaDeProjetos)
@@ -264,87 +286,53 @@ public class ControleDoSistema
                 System.out.println("1 - De 'Em elaboração' para 'Em andamento';");
                 System.out.println("2 - De 'Em andamento' para 'Concluido';");
 
-                opcao = Ler.nextInt();
-                Lixo = Ler.nextLine();
+                opcao = Ler.nextInt();Ler.nextLine();
 
                 if(opcao == 1)
                 {
-                    //Procurar os alunos graduando
-
-                    for(Aluno aluno : projeto.getAlunosVinculados())
-                    {
-                        if(aluno.getNivelUniversitario() == 1)
-                        {
-                            if(aluno.getQuantidadeEmAndamento() == 2)
-                            {
-                                System.out.println("\nO aluno  "+ aluno.getNome() + " já esta vinculado a dois projetos 'Em andamento'!");
-                                System.out.println("Desvincular aluno para prosseguir com a atualização?");
-                                System.out.println("1 - Sim;\n2 - Não;");
-                                 x = Ler.nextInt();
-                                 Lixo = Ler.nextLine();
-                                
-                                if(x == 1){
-                                    
-                                    aluno.getProjetosDePesquisa().remove(projeto);
-                                    System.out.println("1");
-                                    projeto.getAlunosVinculados().remove(aluno);
-                                    System.out.println("2");
-                                    aluno.setDiminuirQuantidadeEmAndamento();
-                                    System.out.println("3");
-                                    System.out.println("Aluno desvinculado com sucesso!");
-                                    
-                                    if(projeto.getAlunosVinculados().isEmpty()){
-                                        System.out.println("Entrou aqui");;
-                                        break;
-                                    }
-                                }else{
-                                    verifica = false;
-                                    break;
-                                }
-                             }else{
-                                aluno.setQuantidadeEmAndamento();
-                            }
-                        }
-                    }
-                    
-                        if(verifica)
-                        {
-                            projeto.setStatus("Em andamento");
-                            System.out.println("\nStatus alterado com sucesso!\n");
-                        }else{
-                            System.out.println("Atualização não efetuada!");
-                        }
-                        break;
+                   for(Aluno aluno : projeto.getAlunosVinculados())
+                   {
+                       if(aluno.getNivelUniversitario() == 1) // Se for aluno de graduação!
+                       {
+                           if(aluno.getQuantidadeEmAndamento() == 2)
+                           {
+                               System.out.println("\n-> A atualização não pôde ser efetuada");
+                               System.out.println("-> Causa: Projeto contem aluno (os) graduando (os) vinculado(os) a dois projetos em andamento;");
+                               System.out.println("-> Solução: Antes de atualizar o status efetue a opção 10 do Menu Principal;");
+                               System.out.println("-> Cancelando a atualização....");
+                               verifica = false;
+                               break;
+                               
+                           }
+                       }
+                   }
+                   if(verifica){
+                       projeto.setStatus("Em andamento");
+                       System.out.println("-> Status alterado com sucesso!");
+                   }
                 }else{
 
-                    if(projeto.getPublicacoesVinculadas().size() > 0)
-                    {
-
-                        projeto.setStatus("Concluido");
-                        for(Aluno aluno : projeto.getAlunosVinculados())
+                        if(projeto.getPublicacoesVinculadas().size() > 0)
                         {
-                            if(aluno.getNivelUniversitario() == 1)
-                            {
-                                aluno.setDiminuirQuantidadeEmAndamento();
 
-                                for(Aluno aluno1 : this.ListaDeAlunos)
+                            projeto.setStatus("Concluido");
+                            for(Aluno aluno : projeto.getAlunosVinculados())
+                            {
+                                if(aluno.getNivelUniversitario() == 1)
                                 {
-                                    if(aluno1.getNome().equals(aluno.getNome()))
-                                    {
-                                        aluno1 = aluno;
-                                        break;
-                                    }
+                                    aluno.setDiminuirQuantidadeEmAndamento();
+                                    AtualizarListaDeAlunos(aluno);
                                 }
                             }
+                            System.out.println("Status alterado com sucesso!\n");
+                        }else{
+                            System.out.println("Não ha publicações vinculadas ao projeto!");
                         }
-                        System.out.println("Status alterado com sucesso!\n");
-                    }else{
-                        System.out.println("Não ha publicações vinculadas ao projeto!");
                     }
+                break;
             }
         }
     }
-}
     public void MostrarAluno(){
         
         String nome;
@@ -505,7 +493,11 @@ public class ControleDoSistema
 
             if(opcao == 1){
 
-                System.out.println("Informe o nome do Colaborador que deseja consultar: ");
+                System.out.println("Lista de Colaboradores: ");
+                for(Pessoa colaborador : this.Colaboradores){
+                    System.out.println("Nome: " + colaborador.getNome());
+                }
+                System.out.println("\nInforme o nome do Colaborador que deseja consultar: ");
                 auxiliar = Ler.nextLine();
 
                 for(Pessoa pessoa : this.Colaboradores)
@@ -517,6 +509,10 @@ public class ControleDoSistema
                 }
             }else{
 
+                System.out.println("\n-> Lista de Projetos Disponíveis: ");
+                for(Projeto proj : this.ListaDeProjetos){
+                        System.out.println("Titulo: " + proj.getTitulo());
+                }
                 System.out.println("Informe o nome do Projeto que deseja consultar: \n");
                 auxiliar = Ler.nextLine();
 
@@ -553,5 +549,52 @@ public class ControleDoSistema
         System.out.println("Numero total de Projetos: " + this.ListaDeProjetos.size());
         System.out.println("Numero de Publicações: " + this.ListaDePublicacoes.size());
         
+    }
+    public void AtualizarListaDeProjetos(Projeto projeto){
+        
+        for(Projeto proj : this.ListaDeProjetos)
+        {
+            if(proj.getTitulo().equals(projeto.getTitulo()))
+            {
+                proj = projeto;
+            }
+        }
+    }
+    public void AtualizarListaDeAlunos(Aluno alunoI){
+        
+        for(Aluno aluno : this.ListaDeAlunos)
+        {
+            if(aluno.getNome().equals(aluno.getNome()))
+            {
+                aluno = alunoI;
+            }
+        }
+    }
+    public void RemoverAlunosGraduandos(){
+        
+        String titulo;
+        System.out.println("Informe o nome do projeto o qual deseja remover alunos de graduação vinculados a dois projetos 'Em andamento': ");
+        titulo = Ler.nextLine();
+        
+        for(Projeto projeto : this.ListaDeProjetos)
+        {
+            if(projeto.getTitulo().equals(titulo))
+            {
+                for(Aluno alunos : projeto.getAlunosVinculados())
+                {
+                    if(alunos.getNivelUniversitario() == 1 && alunos.getQuantidadeEmAndamento() == 2)
+                    {
+                        System.out.println("removendo...");
+                       projeto.RemoverPessoa(alunos);
+                       alunos.RemoverProjeto(projeto);
+                       
+                       if(projeto.getAlunosVinculados().size() == 0){
+                           break;
+                       }
+                    }
+                    
+                }
+            }
+        }
     }
 }

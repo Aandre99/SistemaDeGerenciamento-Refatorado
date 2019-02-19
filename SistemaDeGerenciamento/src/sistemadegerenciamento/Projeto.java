@@ -81,6 +81,14 @@ public class Projeto implements Comparable<Projeto> {
     public String getStatus() {
         return status;
     }
+    public void RemoverPessoa(Pessoa pessoa)
+    {
+        if(pessoa instanceof Aluno){
+            this.alunosVinculados.remove((Aluno)pessoa);
+        }else{
+            this.professoresVinculados.remove((Professor)pessoa);
+        }
+    }
 
     
     public void setTitulo(String titulo) {
@@ -153,7 +161,7 @@ public class Projeto implements Comparable<Projeto> {
         for(Professor professor : this.professoresVinculados){
             System.out.println("Nome: " + professor.getNome());
         }
-        System.out.println("Lista de Alunos Associados:\n ");
+        System.out.println("Lista de Alunos Associados: ");
         for(Aluno aluno : this.alunosVinculados){
             System.out.println("Nome: " + aluno.getNome());
         }
@@ -166,7 +174,6 @@ public class Projeto implements Comparable<Projeto> {
             System.out.println("Titulo: " + pub.getTituloPublicacao());
         }
     }
-
     @Override
     public int compareTo(Projeto o) {
         
